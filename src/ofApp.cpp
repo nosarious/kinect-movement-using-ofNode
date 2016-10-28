@@ -133,27 +133,15 @@ void ofApp::draw() {
 
 	
 	
-	// draw instructions
-	ofSetColor(255, 255, 255);
-	stringstream reportStream;
-        
-    if(kinect.hasAccelControl()) {
-        reportStream << "accel is: " << ofToString(kinect.getMksAccel().x, 2) << " / "
-        << ofToString(kinect.getMksAccel().y, 2) << " / "
-        << ofToString(kinect.getMksAccel().z, 2) << endl;
-    } else {
-        reportStream << "Note: this is a newer Xbox Kinect or Kinect For Windows device," << endl
-		<< "motor / led / accel controls are not currently supported" << endl << endl;
-    }
+    // draw instructions
+    ofSetColor(255, 255, 255);
+    stringstream reportStream;
     
-	reportStream << "press p to switch between images and point cloud, rotate the point cloud with the mouse" << endl;
-
-    if(kinect.hasCamTiltControl()) {
-    	reportStream << "press UP and DOWN to change the tilt angle: " << angle << " degrees" << endl
-        << "press 1-5 & 0 to change the led mode" << endl;
-    }
     
-	ofDrawBitmapString(reportStream.str(), 20, 652);
+    reportStream << "using the various settings will move the kinect and pointcloud until they are returned to zero."<< endl
+    << "press 's' to save the location, 'l' to load the location, and spacebar to freee motion" << endl;
+    
+    ofDrawBitmapString(reportStream.str(), 20, ofGetHeight()-50);
     gui.draw();
 }
 
@@ -238,101 +226,18 @@ void ofApp::exit() {
 void ofApp::keyPressed (int key) {
 	switch (key) {
             
-            case 's':
-            //if(key == 's'){
-                gui.saveToFile("settings.xml");
-                ofxSaveCamera(kinect2cam, "kinect 2 settings");
+        case 's':
+            gui.saveToFile("settings.xml");
+            ofxSaveCamera(kinect2cam, "kinect 2 settings");
+            break;
+        case 'l':
+            gui.loadFromFile("settings.xml");
+            ofxLoadCamera(kinect2cam, "kinect 2 settings");
             break;
             
-            //}
-            //else if(key == 'l'){
-            case 'l':
-                gui.loadFromFile("settings.xml");
-                ofxLoadCamera(kinect2cam, "kinect 2 settings");
+        case ' ':
+            k2FreezeMotion = true;
             break;
-            //}
-        /*
-		case ' ':
-			bThreshWithOpenCV = !bThreshWithOpenCV;
-			break;
-			
-		case'p':
-			bDrawPointCloud = !bDrawPointCloud;
-			break;
-			
-		case '>':
-		case '.':
-			farThreshold ++;
-			if (farThreshold > 255) farThreshold = 255;
-			break;
-			
-		case '<':
-		case ',':
-			farThreshold --;
-			if (farThreshold < 0) farThreshold = 0;
-			break;
-			
-		case '+':
-		case '=':
-			nearThreshold ++;
-			if (nearThreshold > 255) nearThreshold = 255;
-			break;
-			
-		case '-':
-			nearThreshold --;
-			if (nearThreshold < 0) nearThreshold = 0;
-			break;
-			
-		case 'w':
-			kinect.enableDepthNearValueWhite(!kinect.isDepthNearValueWhite());
-			break;
-			
-		case 'o':
-			kinect.setCameraTiltAngle(angle); // go back to prev tilt
-			kinect.open();
-			break;
-			
-		case 'c':
-			kinect.setCameraTiltAngle(0); // zero the tilt
-			kinect.close();
-			break;
-			
-		case '1':
-			kinect.setLed(ofxKinect::LED_GREEN);
-			break;
-			
-		case '2':
-			kinect.setLed(ofxKinect::LED_YELLOW);
-			break;
-			
-		case '3':
-			kinect.setLed(ofxKinect::LED_RED);
-			break;
-			
-		case '4':
-			kinect.setLed(ofxKinect::LED_BLINK_GREEN);
-			break;
-			
-		case '5':
-			kinect.setLed(ofxKinect::LED_BLINK_YELLOW_RED);
-			break;
-			
-		case '0':
-			kinect.setLed(ofxKinect::LED_OFF);
-			break;
-			
-		case OF_KEY_UP:
-			angle++;
-			if(angle>30) angle=30;
-			kinect.setCameraTiltAngle(angle);
-			break;
-			
-		case OF_KEY_DOWN:
-			angle--;
-			if(angle<-30) angle=-30;
-			kinect.setCameraTiltAngle(angle);
-			break;
-         */
 	}
 }
 
